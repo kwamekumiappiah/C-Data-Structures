@@ -23,7 +23,9 @@ typedef enum {
 // Create and Destroy Linked List
 typedef struct linkedList linkedList;
 linkedList *create_linked_list(void);
+int free_linked_list(linkedList *linked_list);
 
+// Add and Remove Nodes
 int add_node(linkedList *linked_list, DataType type, void *data);
 
 #endif

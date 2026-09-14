@@ -29,6 +29,22 @@ typedef struct linkedList {
     Node *head;
 } linkedList;
 
+int free_linked_list(linkedList *linked_list) {
+    if (linked_list == NULL) {
+        return 0;
+    }
+
+    // Loop through and free all nodes
+    Node *current_node = linked_list->head;
+    while (current_node) {     
+        Node *next_node = current_node->next;
+        free(current_node);
+        current_node = next_node;
+    }
+    free(linked_list);
+    return 0;
+}
+
 int add_node(linkedList *linked_list, DataType type, void *data) {
     Node *ptr = malloc(sizeof(Node));
     if (!ptr) return -1;
