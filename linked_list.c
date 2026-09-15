@@ -41,6 +41,101 @@ typedef struct linkedList {
     Node *head;             // Pointer to the first node
 } linkedList;
 
+
+/**
+ * @brief Helper function to create a node 
+ */
+static Node *create_node(DataType type, void *data) {
+    Node *ptr = malloc(sizeof(Node));
+    if (!ptr) return NULL;
+
+    switch (type) {
+        case TYPE_CHAR:
+            ptr->type = TYPE_CHAR;
+            ptr->value.char_val = *(char *)data;
+            break;
+        case TYPE_UNSIGNED_CHAR:
+            ptr->type = TYPE_UNSIGNED_CHAR;
+            ptr->value.u_char_val = *(unsigned char *)data;
+            break;
+        case TYPE_SHORT:
+            ptr->type = TYPE_SHORT;
+            ptr->value.short_val = *(short *)data;
+            break;
+        case TYPE_UNSIGNED_SHORT:
+            ptr->type = TYPE_UNSIGNED_SHORT;
+            ptr->value.u_short_val = *(unsigned short *)data;
+            break;
+        case TYPE_INT:
+            ptr->type = TYPE_INT;
+            ptr->value.int_val = *(int *)data;
+            break;
+        case TYPE_UNSIGNED_INT:
+            ptr->type = TYPE_UNSIGNED_INT;
+            ptr->value.u_int_val = *(unsigned int *)data;
+            break;
+        case TYPE_LONG:
+            ptr->type = TYPE_LONG;
+            ptr->value.long_val = *(long *)data;
+            break;
+        case TYPE_UNSIGNED_LONG:
+            ptr->type = TYPE_UNSIGNED_LONG;
+            ptr->value.u_long_val = *(unsigned long *)data;
+            break;
+        case TYPE_LONG_LONG:
+            ptr->type = TYPE_LONG_LONG;
+            ptr->value.long_long_val = *(long long *)data;
+            break;
+        case TYPE_UNSIGNED_LONG_LONG:
+            ptr->type = TYPE_UNSIGNED_LONG_LONG;
+            ptr->value.u_long_long_val = *(unsigned long long *)data;
+            break;
+        case TYPE_FLOAT:
+            ptr->type = TYPE_FLOAT;
+            ptr->value.float_val = *(float *)data;
+            break;
+        case TYPE_DOUBLE:
+            ptr->type = TYPE_DOUBLE;
+            ptr->value.double_val = *(double *)data;
+            break;
+        case TYPE_LONG_DOUBLE:
+            ptr->type = TYPE_LONG_DOUBLE;
+            ptr->value.long_double_val = *(long double *)data;
+            break;
+        case TYPE_VOID_POINTER:
+            ptr->type = TYPE_VOID_POINTER;
+            ptr->value.void_ptr_val = data;
+            break;
+        default:
+            free(ptr);
+            return NULL;
+    }
+    return ptr;
+}
+
+
+/**
+ * @brief Insert a node at a given index 
+ */
+
+// int insert_value(linkedList *linked_list, size_t index, DataType type, void *data) {
+//     // Validat inputs
+//     if (!linked_list) return 1;
+//     if (index > linked_list->length) return 1;
+
+//     Node *pointer = malloc(sizeof(Node));
+//     if (!pointer) return 1;
+    
+
+//     // Handle Edge Case, index is 0 and linked list is empty
+//     if ((index == 0) && (linked_list->length == 0)) {
+//         // PASS
+//     }
+
+//     return 0;
+// }
+
+
 /**
  * @brief Deletes a node at a specified index with bounds checking.
  */
@@ -157,70 +252,8 @@ int free_linked_list(linkedList *linked_list) {
  * @brief Allocates and appends a new node to the end of the list.
  */
 int add_node(linkedList *linked_list, DataType type, void *data) {
-    Node *ptr = malloc(sizeof(Node));
-    if (!ptr) return -1;
-
-    switch (type) {
-        case TYPE_CHAR:
-            ptr->type = TYPE_CHAR;
-            ptr->value.char_val = *(char *)data;
-            break;
-        case TYPE_UNSIGNED_CHAR:
-            ptr->type = TYPE_UNSIGNED_CHAR;
-            ptr->value.u_char_val = *(unsigned char *)data;
-            break;
-        case TYPE_SHORT:
-            ptr->type = TYPE_SHORT;
-            ptr->value.short_val = *(short *)data;
-            break;
-        case TYPE_UNSIGNED_SHORT:
-            ptr->type = TYPE_UNSIGNED_SHORT;
-            ptr->value.u_short_val = *(unsigned short *)data;
-            break;
-        case TYPE_INT:
-            ptr->type = TYPE_INT;
-            ptr->value.int_val = *(int *)data;
-            break;
-        case TYPE_UNSIGNED_INT:
-            ptr->type = TYPE_UNSIGNED_INT;
-            ptr->value.u_int_val = *(unsigned int *)data;
-            break;
-        case TYPE_LONG:
-            ptr->type = TYPE_LONG;
-            ptr->value.long_val = *(long *)data;
-            break;
-        case TYPE_UNSIGNED_LONG:
-            ptr->type = TYPE_UNSIGNED_LONG;
-            ptr->value.u_long_val = *(unsigned long *)data;
-            break;
-        case TYPE_LONG_LONG:
-            ptr->type = TYPE_LONG_LONG;
-            ptr->value.long_long_val = *(long long *)data;
-            break;
-        case TYPE_UNSIGNED_LONG_LONG:
-            ptr->type = TYPE_UNSIGNED_LONG_LONG;
-            ptr->value.u_long_long_val = *(unsigned long long *)data;
-            break;
-        case TYPE_FLOAT:
-            ptr->type = TYPE_FLOAT;
-            ptr->value.float_val = *(float *)data;
-            break;
-        case TYPE_DOUBLE:
-            ptr->type = TYPE_DOUBLE;
-            ptr->value.double_val = *(double *)data;
-            break;
-        case TYPE_LONG_DOUBLE:
-            ptr->type = TYPE_LONG_DOUBLE;
-            ptr->value.long_double_val = *(long double *)data;
-            break;
-        case TYPE_VOID_POINTER:
-            ptr->type = TYPE_VOID_POINTER;
-            ptr->value.void_ptr_val = data;
-            break;
-        default:
-            free(ptr);
-            return -1;
-    }
+    Node *ptr = create_node(type, data);
+    if (!ptr) return 1;
 
     ptr->next = NULL;
 
