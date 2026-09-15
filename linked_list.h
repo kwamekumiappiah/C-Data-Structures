@@ -19,6 +19,11 @@ typedef enum {
     TYPE_VOID_POINTER
 } DataType;
 
+// Allow values to be returned instead of the list buy usinf a void pointer and a type tracker
+typedef struct {
+    DataType type;
+    void *data;
+} ListElement;
 
 // Create and Destroy Linked List
 typedef struct linkedList linkedList;
@@ -32,6 +37,9 @@ int delete_node(linkedList * linked_list, size_t index);
 
 // Display Information
 void print_linked_list(linkedList *linked_list);
+
+// Search for information
+ListElement search_by_index(linkedList *linked_list, size_t index);
 
 
 #endif

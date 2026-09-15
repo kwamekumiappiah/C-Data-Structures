@@ -43,7 +43,7 @@ typedef struct linkedList {
 
 
 /**
- * @brief Helper function to create a node.
+ * @brief Helper Function: Create a node.
  */
 static Node *create_node(DataType type, void *data) {
     Node *ptr = malloc(sizeof(Node));
@@ -114,7 +114,7 @@ static Node *create_node(DataType type, void *data) {
 }
 
 /**
- * @brief Helper function identify and return the node just before a target node.
+ * @brief Helper Function: Identify and return the node just before a target node.
  */
 static Node *get_node_before_target(linkedList *linked_list, size_t index) {
     Node *current_node = linked_list->head;
@@ -126,6 +126,84 @@ static Node *get_node_before_target(linkedList *linked_list, size_t index) {
         tracker++;
     }
     return current_node;
+}
+
+
+/**
+ * @brief Helper Function: Identify value in node to be returned
+ */
+static void *get_value(Node *node) {
+    void *ptr;
+    switch (node->type) {
+        case TYPE_CHAR:
+            ptr = &(node->value.char_val);
+            break;
+        case TYPE_UNSIGNED_CHAR:
+            ptr = &(node->value.u_char_val);
+            break;
+        case TYPE_SHORT:
+            ptr = &(node->value.short_val);
+            break;
+        case TYPE_UNSIGNED_SHORT:
+            ptr = &(node->value.u_short_val);
+            break;
+        case TYPE_INT:
+            ptr = &(node->value.int_val);
+            break;
+        case TYPE_UNSIGNED_INT:
+            ptr = &(node->value.u_int_val);
+            break;
+        case TYPE_LONG:
+            ptr = &(node->value.long_val);
+            break;
+        case TYPE_UNSIGNED_LONG:
+            ptr = &(node->value.u_long_val);
+            break;
+        case TYPE_LONG_LONG:
+            ptr = &(node->value.long_long_val);
+            break;
+        case TYPE_UNSIGNED_LONG_LONG:
+            ptr = &(node->value.u_long_long_val);
+            break;
+        case TYPE_FLOAT:
+            ptr = &(node->value.float_val);
+            break;
+        case TYPE_DOUBLE:
+            ptr = &(node->value.double_val);
+            break;
+        case TYPE_LONG_DOUBLE:
+            ptr = &(node->value.long_double_val);
+            break;
+        case TYPE_VOID_POINTER:
+            ptr = (node->value.void_ptr_val);
+            break;
+        default:
+            ptr = NULL;
+            break;
+    }
+    return ptr;
+}
+
+
+/**
+ * @brief Get and return value of the data inside a node based on index
+ */
+ListElement search_by_index(linkedList *linked_list, size_t index) {
+    ListElement return_data = {.data = NULL, .type = 0};
+    if (!linked_list) return return_data;
+    if (index >= linked_list->length) return return_data; // Bounds check
+
+    Node *target_node;
+    if (index == 0) {
+        target_node = linked_list->head;
+    } else {
+        Node *node_before_target = get_node_before_target(linked_list, index);
+        target_node = node_before_target->next;
+    }
+    
+    return_data.data =  get_value(target_node);
+    return_data.type = target_node->type;
+    return return_data;
 }
 
 /**
