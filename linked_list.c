@@ -43,7 +43,7 @@ typedef struct linkedList {
 
 
 /**
- * @brief Helper function to create a node 
+ * @brief Helper function to create a node.
  */
 static Node *create_node(DataType type, void *data) {
     Node *ptr = malloc(sizeof(Node));
@@ -113,6 +113,9 @@ static Node *create_node(DataType type, void *data) {
     return ptr;
 }
 
+/**
+ * @brief Helper function identify and return the node just before a target node.
+ */
 static Node *get_node_before_target(linkedList *linked_list, size_t index) {
     Node *current_node = linked_list->head;
     size_t tracker = 0;
@@ -126,35 +129,33 @@ static Node *get_node_before_target(linkedList *linked_list, size_t index) {
 }
 
 /**
- * @brief Insert a node at a given index 
+ * @brief Insert a node at a given index.
  */
 
-// int insert_value(linkedList *linked_list, size_t index, DataType type, void *data) {
-//     // Validat inputs
-//     if (!linked_list) return 1;
-//     if (index > linked_list->length) return 1;
+int insert_value(linkedList *linked_list, size_t index, DataType type, void *data) {
+    // Validat inputs
+    if (!linked_list) return 1;
+    if (index > linked_list->length) return 1;
 
-//     Node *pointer = malloc(sizeof(Node));
-//     if (!pointer) return 1;
-    
+    Node *new_node = create_node(type, data);
+    if (!new_node) return 1;
 
-//     // Handle Edge Case, index is 0 and linked list is empty
-//     if ((index == 0) && (linked_list->length == 0)) {
-//         linked_list->head = pointer;
-//     }
-
-//     // Handle Edge Case, index is 0 and linked list is not empty
-//     if (index == 0) {
-//         Node * current_head = linked_list->head;
-//         linked_list->head = pointer;
-//         pointer->next = current_head;
-//     }
-
-
-
-
-//     return 0;
-// }
+    // Handle Edge Case, index is 0 and linked list is not empty
+    // Handle Edge Case, index is 0 and linked list is empty
+    if ((index == 0) && (linked_list->length == 0)) {
+        linked_list->head = new_node;
+    } else if (index == 0) {                               
+        Node * current_head = linked_list->head;
+        linked_list->head = new_node;
+        new_node->next = current_head;
+    } else {
+        Node *current_node = get_node_before_target(linked_list, index);
+        new_node->next = current_node->next;
+        current_node->next = new_node;
+    }
+    linked_list->length++;
+    return 0;
+}
 
 
 /**
