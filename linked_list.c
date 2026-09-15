@@ -113,6 +113,17 @@ static Node *create_node(DataType type, void *data) {
     return ptr;
 }
 
+static Node *get_node_before_target(linkedList *linked_list, size_t index) {
+    Node *current_node = linked_list->head;
+    size_t tracker = 0;
+        
+    while (tracker < index - 1) {
+        Node *next_node = current_node->next;
+        current_node = next_node;
+        tracker++;
+    }
+    return current_node;
+}
 
 /**
  * @brief Insert a node at a given index 
@@ -129,8 +140,18 @@ static Node *create_node(DataType type, void *data) {
 
 //     // Handle Edge Case, index is 0 and linked list is empty
 //     if ((index == 0) && (linked_list->length == 0)) {
-//         // PASS
+//         linked_list->head = pointer;
 //     }
+
+//     // Handle Edge Case, index is 0 and linked list is not empty
+//     if (index == 0) {
+//         Node * current_head = linked_list->head;
+//         linked_list->head = pointer;
+//         pointer->next = current_head;
+//     }
+
+
+
 
 //     return 0;
 // }
@@ -150,14 +171,7 @@ int delete_node(linkedList *linked_list, size_t index) {
         linked_list->head = temp;
     } else {
         // Traverse to the node right before the target index
-        Node *current_node = linked_list->head;
-        size_t tracker = 0;
-        
-        while (tracker < index - 1) {
-            Node *next_node = current_node->next;
-            current_node = next_node;
-            tracker++;
-        }
+        Node *current_node = get_node_before_target(linked_list, index);
         
         // Bypass and free the target node
         Node *node_after_target = current_node->next->next;
