@@ -1,9 +1,18 @@
+/**
+ * @file linked_list.c
+ * @brief Implementation of a heterogeneous, memory-safe linked list in C.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "linked_list.h"
 
+/**
+ * @struct Node
+ * @brief Represents an individual element in the heterogeneous list.
+ */
 typedef struct Node {
-    DataType type; // Discriminator: tracks which union field is active
+    DataType type;          // Discriminator tracking the active union field
     union {
         char char_val;
         unsigned char u_char_val;
@@ -20,34 +29,137 @@ typedef struct Node {
         long double long_double_val;
         void *void_ptr_val;
     } value;
-    struct Node* next;
+    struct Node *next;      // Pointer to the next node in the sequence
 } Node;
 
-
+/**
+ * @struct linkedList
+ * @brief Represents the container holding the list metadata and head pointer.
+ */
 typedef struct linkedList {
-    size_t length;
-    Node *head;
+    size_t length;          // Total number of active nodes
+    Node *head;             // Pointer to the first node
 } linkedList;
 
+/**
+ * @brief Deletes a node at a specified index with bounds checking.
+ */
+int delete_node(linkedList *linked_list, size_t index) {
+    if (!linked_list) return 0;
+    if (index >= linked_list->length) return 1;
+
+    // Handle head node removal
+    if (index == 0) {
+        Node *temp = linked_list->head->next;
+        free(linked_list->head);
+        linked_list->head = temp;
+    } else {
+        // Traverse to the node right before the target index
+        Node *current_node = linked_list->head;
+        size_t tracker = 0;
+        
+        while (tracker < index - 1) {
+            Node *next_node = current_node->next;
+            current_node = next_node;
+            tracker++;
+        }
+        
+        // Bypass and free the target node
+        Node *node_after_target = current_node->next->next;
+        free(current_node->next);
+        current_node->next = node_after_target;
+    }
+    
+    linked_list->length--;
+    return 0;
+}
+
+/**
+ * @brief Traverses the list and prints each node's value based on its type.
+ */
+void print_linked_list(linkedList *linked_list) {
+    if (!linked_list) return;
+    
+    Node *current_node = linked_list->head;
+    while (current_node) {
+        switch (current_node->type) {
+            case TYPE_CHAR:
+                printf("%c -> ", current_node->value.char_val);
+                break;
+            case TYPE_UNSIGNED_CHAR:
+                printf("%u -> ", current_node->value.u_char_val);
+                break;
+            case TYPE_SHORT:
+                printf("%d -> ", current_node->value.short_val);
+                break;
+            case TYPE_UNSIGNED_SHORT:
+                printf("%u -> ", current_node->value.u_short_val);
+                break;
+            case TYPE_INT:
+                printf("%d -> ", current_node->value.int_val);
+                break;
+            case TYPE_UNSIGNED_INT:
+                printf("%u -> ", current_node->value.u_int_val);
+                break;
+            case TYPE_LONG:
+                printf("%ld -> ", current_node->value.long_val);
+                break;
+            case TYPE_UNSIGNED_LONG:
+                printf("%lu -> ", current_node->value.u_long_val);
+                break;
+            case TYPE_LONG_LONG:
+                printf("%lld -> ", current_node->value.long_long_val);
+                break;
+            case TYPE_UNSIGNED_LONG_LONG:
+                printf("%llu -> ", current_node->value.u_long_long_val);
+                break;
+            case TYPE_FLOAT:
+                printf("%f -> ", current_node->value.float_val);
+                break;
+            case TYPE_DOUBLE:
+                printf("%f -> ", current_node->value.double_val);
+                break;
+            case TYPE_LONG_DOUBLE:
+                printf("%Lf -> ", current_node->value.long_double_val);
+                break;
+            case TYPE_VOID_POINTER:
+                printf("%p -> ", current_node->value.void_ptr_val);
+                break;
+            default:
+                printf("[unknown] -> ");
+                break;
+        }
+        current_node = current_node->next;
+    }
+    printf("NULL\n");
+}
+
+/**
+ * @brief Frees all nodes and the list container itself to prevent memory leaks.
+ */
 int free_linked_list(linkedList *linked_list) {
     if (linked_list == NULL) {
         return 0;
     }
 
-    // Loop through and free all nodes
     Node *current_node = linked_list->head;
-    while (current_node) {     
+    while (current_node) {    
         Node *next_node = current_node->next;
         free(current_node);
         current_node = next_node;
     }
+    
     free(linked_list);
     return 0;
 }
 
+/**
+ * @brief Allocates and appends a new node to the end of the list.
+ */
 int add_node(linkedList *linked_list, DataType type, void *data) {
     Node *ptr = malloc(sizeof(Node));
     if (!ptr) return -1;
+
     switch (type) {
         case TYPE_CHAR:
             ptr->type = TYPE_CHAR;
@@ -103,13 +215,15 @@ int add_node(linkedList *linked_list, DataType type, void *data) {
             break;
         case TYPE_VOID_POINTER:
             ptr->type = TYPE_VOID_POINTER;
-            ptr->value.void_ptr_val = data; // Assumes 'data' is the pointer value itself
+            ptr->value.void_ptr_val = data;
             break;
         default:
             free(ptr);
-            return -1; // Invalid type handler
+            return -1;
     }
+
     ptr->next = NULL;
+
     if (linked_list->head == NULL) {
         linked_list->head = ptr;
     } else {
@@ -119,12 +233,15 @@ int add_node(linkedList *linked_list, DataType type, void *data) {
         }
         current_ptr->next = ptr;
     }
+
     linked_list->length += 1;
     return 0;
 }
 
+/**
+ * @brief Allocates and initializes a new linked list container.
+ */
 linkedList *create_linked_list(void) {
-    // Create a linked list
     linkedList *pointer = malloc(sizeof(linkedList));
     if (!pointer) return NULL;
 
