@@ -256,9 +256,6 @@ size_t get_list_length(const linkedList *linked_list) {
 }
 
 int prepend_node(linkedList *linked_list, DataType type, void *data) {
-    Node *new_node = create_node(type, data);
-    if (!new_node) return 1;
-
     if (insert_value(linked_list, 0, type, data) == 1) return 1;
     return 0;
 }
