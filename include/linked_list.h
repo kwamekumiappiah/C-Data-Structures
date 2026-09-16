@@ -35,6 +35,7 @@ int free_linked_list(linkedList *linked_list);
 int add_node(linkedList *linked_list, DataType type, void *data);
 int insert_value(linkedList *linked_list, size_t index, DataType type, void *data);
 int delete_node(linkedList * linked_list, size_t index);
+int delete_node_value(linkedList *linked_list, DataType type, void *data);
 
 // Display Information
 void print_linked_list(linkedList *linked_list);

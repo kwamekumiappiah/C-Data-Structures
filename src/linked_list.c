@@ -113,6 +113,7 @@ static Node *create_node(DataType type, void *data) {
     return ptr;
 }
 
+
 /**
  * @brief Helper Function: Identify and return the node just before a target node when using index.
  */
@@ -184,54 +185,96 @@ static void *get_value(Node *node) {
     return ptr;
 }
 
-static int compare_values(DataType type, void *data, void *stored_data) {
-    switch (type) {
+/**
+ * @brief Helper Function: Compare values of nodes and return an int.
+ */
+/**
+ * @brief Helper Function: Safely check if a node's type and value match search criteria.
+ * @return 0 if both type and value match, 1 otherwise.
+ */
+static int compare_node_value(DataType search_type, void *search_data, Node *node) {
+    // 🛡️ Type & Existence Guard: Fail fast if node is NULL or types don't match
+    if (!node || node->type != search_type) {
+        return 1;
+    }
+
+    void *stored_data = (void *)&node->value;
+
+    switch (search_type) {
         case TYPE_CHAR:
-            if (*(char *)stored_data == *(char *)data) return 0;
+            if (*(char *)stored_data == *(char *)search_data) return 0;
             break;
         case TYPE_UNSIGNED_CHAR:
-            if (*(unsigned char *)stored_data == *(unsigned char *)data) return 0;
+            if (*(unsigned char *)stored_data == *(unsigned char *)search_data) return 0;
             break;
         case TYPE_SHORT:
-            if (*(short *)stored_data == *(short *)data) return 0;
+            if (*(short *)stored_data == *(short *)search_data) return 0;
             break;
         case TYPE_UNSIGNED_SHORT:
-            if (*(unsigned short *)stored_data == *(unsigned short *)data) return 0;
+            if (*(unsigned short *)stored_data == *(unsigned short *)search_data) return 0;
             break;
         case TYPE_INT:
-            if (*(int *)stored_data == *(int *)data) return 0;
+            if (*(int *)stored_data == *(int *)search_data) return 0;
             break;
         case TYPE_UNSIGNED_INT:
-            if (*(unsigned int *)stored_data == *(unsigned int *)data) return 0;
+            if (*(unsigned int *)stored_data == *(unsigned int *)search_data) return 0;
             break;
         case TYPE_LONG:
-            if (*(long *)stored_data == *(long *)data) return 0;
+            if (*(long *)stored_data == *(long *)search_data) return 0;
             break;
         case TYPE_UNSIGNED_LONG:
-            if (*(unsigned long *)stored_data == *(unsigned long *)data) return 0;
+            if (*(unsigned long *)stored_data == *(unsigned long *)search_data) return 0;
             break;
         case TYPE_LONG_LONG:
-            if (*(long long *)stored_data == *(long long *)data) return 0;
+            if (*(long long *)stored_data == *(long long *)search_data) return 0;
             break;
         case TYPE_UNSIGNED_LONG_LONG:
-            if (*(unsigned long long *)stored_data == *(unsigned long long *)data) return 0;
+            if (*(unsigned long long *)stored_data == *(unsigned long long *)search_data) return 0;
             break;
         case TYPE_FLOAT:
-            if (*(float *)stored_data == *(float *)data) return 0;
+            if (*(float *)stored_data == *(float *)search_data) return 0;
             break;
         case TYPE_DOUBLE:
-            if (*(double *)stored_data == *(double *)data) return 0;
+            if (*(double *)stored_data == *(double *)search_data) return 0;
             break;
         case TYPE_LONG_DOUBLE:
-            if (*(long double *)stored_data == *(long double *)data) return 0;
+            if (*(long double *)stored_data == *(long double *)search_data) return 0;
             break;
         case TYPE_VOID_POINTER:
-            if (*(void **)stored_data == *(void **)data) return 0;
+            if (*(void **)stored_data == *(void **)search_data) return 0;
             break;
         default:
             return 1;
-            break;
+    }
+    return 1;
+}
+
+/**
+ * @brief Get and remove node based on value
+ */
+int delete_node_value(linkedList *linked_list, DataType type, void *data) {
+    if (!linked_list || !(linked_list->head)) return 1;
+    // If the head matches search, remove, delete and assign new head
+    if (compare_node_value(type, data, linked_list->head) == 0) {
+        Node *old_head = linked_list->head;
+        linked_list->head = linked_list->head->next;
+        free(old_head);
+        linked_list->length--;
+        return 0;
+    }
+
+    // Loop through and check if the next nodes are a match, if so set.
+    Node *current_node = linked_list->head;
+    while (current_node->next) {
+        if (compare_node_value(type, data, current_node->next) == 0) {
+            Node *target_node = current_node->next;
+            current_node->next = current_node->next->next;
+            free(target_node);
+            linked_list->length--;
+            return 0;
         }
+        current_node = current_node->next;
+    }
     return 1;
 }
 
@@ -247,14 +290,11 @@ ListElement search_by_value(linkedList *linked_list, DataType type, void *data) 
 
     while (current_node) {
         // First check if the type matches
-        if (current_node->type == type) {
-            // Then check if the values match
-            if (compare_values(type, data, &(current_node->value)) == 0) {
-                // Match found! Package the data and return.
-                return_data.data = &(current_node->value);
-                return_data.type = current_node->type;
-                return return_data;
-            }
+        if (compare_node_value(type, data, current_node) == 0) {
+            // Match found! Package the data and return.
+            return_data.data = &(current_node->value);
+            return_data.type = current_node->type;
+            return return_data;
         }
         // Advance to the next node
         current_node = current_node->next;
@@ -263,7 +303,6 @@ ListElement search_by_value(linkedList *linked_list, DataType type, void *data) 
     // If the loop finishes without finding a match, return the TYPE_INVALID sentinel
     return return_data;
 }
-
 
 
 /**
@@ -290,7 +329,6 @@ ListElement search_by_index(linkedList *linked_list, size_t index) {
 /**
  * @brief Insert a node at a given index.
  */
-
 int insert_value(linkedList *linked_list, size_t index, DataType type, void *data) {
     // Validat inputs
     if (!linked_list) return 1;
