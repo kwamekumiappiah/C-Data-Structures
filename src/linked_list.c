@@ -185,9 +185,7 @@ static void *get_value(Node *node) {
     return ptr;
 }
 
-/**
- * @brief Helper Function: Compare values of nodes and return an int.
- */
+
 /**
  * @brief Helper Function: Safely check if a node's type and value match search criteria.
  * @return 0 if both type and value match, 1 otherwise.
@@ -247,6 +245,22 @@ static int compare_node_value(DataType search_type, void *search_data, Node *nod
             return 1;
     }
     return 1;
+}
+
+/**
+ * @brief Return length of list
+ */
+size_t get_list_length(const linkedList *linked_list) {
+    if (!linked_list) return 0;
+    return linked_list->length; 
+}
+
+int prepend_node(linkedList *linked_list, DataType type, void *data) {
+    Node *new_node = create_node(type, data);
+    if (!new_node) return 1;
+
+    if (insert_value(linked_list, 0, type, data) == 1) return 1;
+    return 0;
 }
 
 /**

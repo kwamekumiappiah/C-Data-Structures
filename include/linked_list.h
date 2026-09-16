@@ -31,11 +31,15 @@ typedef struct linkedList linkedList;
 linkedList *create_linked_list(void);
 int free_linked_list(linkedList *linked_list);
 
-// Add and Remove Nodes
+// Add Nodes
 int add_node(linkedList *linked_list, DataType type, void *data);
 int insert_value(linkedList *linked_list, size_t index, DataType type, void *data);
+int prepend_node(linkedList *linked_list, DataType type, void *data);
+
+// Delete Nodes
 int delete_node(linkedList * linked_list, size_t index);
 int delete_node_value(linkedList *linked_list, DataType type, void *data);
+
 
 // Display Information
 void print_linked_list(linkedList *linked_list);
@@ -44,4 +48,6 @@ void print_linked_list(linkedList *linked_list);
 ListElement search_by_index(linkedList *linked_list, size_t index);
 ListElement search_by_value(linkedList *linked_list, DataType type, void *data);
 
+
+size_t get_list_length(const linkedList *linked_list);
 #endif

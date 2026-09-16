@@ -17,7 +17,7 @@ int main(void) {
     add_node(my_linked_list, TYPE_CHAR, &letter);
 
     print_linked_list(my_linked_list);
-    delete_node_value(my_linked_list, TYPE_INT, &number);
+    printf("%d\n", prepend_node(my_linked_list, TYPE_CHAR, &mychar));
     print_linked_list(my_linked_list);
     free_linked_list(my_linked_list);
     return 0;
