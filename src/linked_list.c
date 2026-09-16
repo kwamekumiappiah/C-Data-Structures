@@ -114,7 +114,7 @@ static Node *create_node(DataType type, void *data) {
 }
 
 /**
- * @brief Helper Function: Identify and return the node just before a target node.
+ * @brief Helper Function: Identify and return the node just before a target node when using index.
  */
 static Node *get_node_before_target(linkedList *linked_list, size_t index) {
     Node *current_node = linked_list->head;
@@ -130,7 +130,7 @@ static Node *get_node_before_target(linkedList *linked_list, size_t index) {
 
 
 /**
- * @brief Helper Function: Identify value in node to be returned
+ * @brief Helper Function: Identify value in node to be returned based on type
  */
 static void *get_value(Node *node) {
     void *ptr;
@@ -184,12 +184,93 @@ static void *get_value(Node *node) {
     return ptr;
 }
 
+static int compare_values(DataType type, void *data, void *stored_data) {
+    switch (type) {
+        case TYPE_CHAR:
+            if (*(char *)stored_data == *(char *)data) return 0;
+            break;
+        case TYPE_UNSIGNED_CHAR:
+            if (*(unsigned char *)stored_data == *(unsigned char *)data) return 0;
+            break;
+        case TYPE_SHORT:
+            if (*(short *)stored_data == *(short *)data) return 0;
+            break;
+        case TYPE_UNSIGNED_SHORT:
+            if (*(unsigned short *)stored_data == *(unsigned short *)data) return 0;
+            break;
+        case TYPE_INT:
+            if (*(int *)stored_data == *(int *)data) return 0;
+            break;
+        case TYPE_UNSIGNED_INT:
+            if (*(unsigned int *)stored_data == *(unsigned int *)data) return 0;
+            break;
+        case TYPE_LONG:
+            if (*(long *)stored_data == *(long *)data) return 0;
+            break;
+        case TYPE_UNSIGNED_LONG:
+            if (*(unsigned long *)stored_data == *(unsigned long *)data) return 0;
+            break;
+        case TYPE_LONG_LONG:
+            if (*(long long *)stored_data == *(long long *)data) return 0;
+            break;
+        case TYPE_UNSIGNED_LONG_LONG:
+            if (*(unsigned long long *)stored_data == *(unsigned long long *)data) return 0;
+            break;
+        case TYPE_FLOAT:
+            if (*(float *)stored_data == *(float *)data) return 0;
+            break;
+        case TYPE_DOUBLE:
+            if (*(double *)stored_data == *(double *)data) return 0;
+            break;
+        case TYPE_LONG_DOUBLE:
+            if (*(long double *)stored_data == *(long double *)data) return 0;
+            break;
+        case TYPE_VOID_POINTER:
+            if (*(void **)stored_data == *(void **)data) return 0;
+            break;
+        default:
+            return 1;
+            break;
+        }
+    return 1;
+}
+
+/**
+ * @brief Get and return value of the data inside a node based on value
+ */
+ListElement search_by_value(linkedList *linked_list, DataType type, void *data) {
+    ListElement return_data = {.data = NULL, .type = TYPE_INVALID};
+    
+    if (!linked_list || !data) return return_data;
+    
+    Node *current_node = linked_list->head;
+
+    while (current_node) {
+        // First check if the type matches
+        if (current_node->type == type) {
+            // Then check if the values match
+            if (compare_values(type, data, &(current_node->value)) == 0) {
+                // Match found! Package the data and return.
+                return_data.data = &(current_node->value);
+                return_data.type = current_node->type;
+                return return_data;
+            }
+        }
+        // Advance to the next node
+        current_node = current_node->next;
+    }
+
+    // If the loop finishes without finding a match, return the TYPE_INVALID sentinel
+    return return_data;
+}
+
+
 
 /**
  * @brief Get and return value of the data inside a node based on index
  */
 ListElement search_by_index(linkedList *linked_list, size_t index) {
-    ListElement return_data = {.data = NULL, .type = 0};
+    ListElement return_data = {.data = NULL, .type = TYPE_INVALID};
     if (!linked_list) return return_data;
     if (index >= linked_list->length) return return_data; // Bounds check
 

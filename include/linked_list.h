@@ -3,6 +3,7 @@
 
 // Make DataType visible to both the implimentaton file and the client file
 typedef enum {
+    TYPE_INVALID = - 1, // Reseved for lookup errors.
     TYPE_CHAR,
     TYPE_UNSIGNED_CHAR,
     TYPE_SHORT,
@@ -40,6 +41,6 @@ void print_linked_list(linkedList *linked_list);
 
 // Search for information
 ListElement search_by_index(linkedList *linked_list, size_t index);
-
+ListElement search_by_value(linkedList *linked_list, DataType type, void *data);
 
 #endif
