@@ -255,9 +255,11 @@ size_t get_list_length(const linkedList *linked_list) {
     return linked_list->length; 
 }
 
+/**
+ * @brief Add a node to the front of the linked list
+ */
 int prepend_node(linkedList *linked_list, DataType type, void *data) {
-    if (insert_value(linked_list, 0, type, data) == 1) return 1;
-    return 0;
+    return insert_value(linked_list, 0, type, data);
 }
 
 /**
