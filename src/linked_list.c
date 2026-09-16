@@ -247,6 +247,23 @@ static int compare_node_value(DataType search_type, void *search_data, Node *nod
     return 1;
 }
 
+int contains_value(linkedList *linked_list, DataType type, void *data) {
+    if (!linked_list || !data) return 1;
+    
+    Node *current_node = linked_list->head;
+
+    while (current_node) {
+        // First check if the type matches
+        if (compare_node_value(type, data, current_node) == 0) {
+            // Match found! Package the data and return.
+            return 0;
+        }
+        // Advance to the next node
+        current_node = current_node->next;
+    }
+    return 1;
+}
+
 /**
  * @brief Return length of list
  */
