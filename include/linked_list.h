@@ -52,4 +52,5 @@ ListElement search_by_value(linkedList *linked_list, DataType type, void *data);
 int is_empty(const linkedList *linked_list);
 size_t get_list_length(const linkedList *linked_list);
 linkedList *clone_list(linkedList *linked_list);
+int reverse_list(linkedList *linked_list);
 #endif

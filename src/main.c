@@ -11,22 +11,18 @@ int main(void) {
     char mychar = 'A';
 
 
-    // add_node(my_linked_list, TYPE_INT, &number);
-    // add_node(my_linked_list, TYPE_LONG_LONG, &xp);
-    // add_node(my_linked_list, TYPE_INT, &number2);
-    // add_node(my_linked_list, TYPE_CHAR, &letter);
+    add_node(my_linked_list, TYPE_INT, &number);
+    add_node(my_linked_list, TYPE_LONG_LONG, &xp);
+    add_node(my_linked_list, TYPE_INT, &number2);
+    add_node(my_linked_list, TYPE_CHAR, &letter);
 
     print_linked_list(my_linked_list);
-    // prepend_node(my_linked_list, TYPE_CHAR, &mychar);
+    prepend_node(my_linked_list, TYPE_CHAR, &mychar);
     print_linked_list(my_linked_list);
 
-    linkedList *new_list = clone_list(my_linked_list);
-    print_linked_list(new_list);
-    printf("%zu\n", get_list_length(my_linked_list));
-    printf("%zu\n", get_list_length(new_list));
-
+    reverse_list(my_linked_list);
+    print_linked_list(my_linked_list);
     free_linked_list(my_linked_list);
-    free_linked_list(new_list);
     return 0;
 
 }

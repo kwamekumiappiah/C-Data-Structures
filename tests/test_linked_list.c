@@ -130,6 +130,27 @@ static void test_cloning_and_display(void) {
     free_linked_list(clone);
 }
 
+static void test_reverse_list(void) {
+    printf("\n--- 6. Testing List Reversal ---\n");
+    linkedList *list = create_linked_list();
+
+    int v1 = 10, v2 = 20, v3 = 30;
+    add_node(list, TYPE_INT, &v1);
+    add_node(list, TYPE_INT, &v2);
+    add_node(list, TYPE_INT, &v3); // List: [10, 20, 30]
+
+    int status = reverse_list(list);
+    TEST_ASSERT(status == 0, "Reverse list function executed successfully");
+
+    ListElement first = search_by_index(list, 0);
+    ListElement last = search_by_index(list, 2);
+
+    TEST_ASSERT(*(int *)first.data == 30, "Index 0 now holds 30 (new head)");
+    TEST_ASSERT(*(int *)last.data == 10, "Index 2 now holds 10 (new tail)");
+
+    free_linked_list(list);
+}
+
 int main(void) {
     printf("=========================================\n");
     printf(" 🚀 STARTING LINKED LIST FULL TEST SUITE \n");
@@ -140,6 +161,7 @@ int main(void) {
     test_search_functions();
     test_deletion_modes();
     test_cloning_and_display();
+    test_reverse_list();
 
     printf("\n=========================================\n");
     printf(" 🎉 ALL TESTS COMPLETED \n");

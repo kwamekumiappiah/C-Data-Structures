@@ -130,6 +130,27 @@ static Node *get_node_before_target(linkedList *linked_list, size_t index) {
     return current_node;
 }
 
+/**
+ * @brief Reverses the order of nodes in the linked list in-place.
+ * @param linked_list Pointer to the linked list.
+ * @return 0 on success, 1 if the list pointer is NULL.
+ */
+int reverse_list(linkedList *linked_list) {
+    if (!linked_list) return 1;
+    if (!linked_list->head) return 0;
+    if (!linked_list->head->next) return 0;
+
+    Node *prev = NULL;
+    Node *current = linked_list->head;
+    while (current) {
+        Node *next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    linked_list->head = prev;
+    return 0;
+}
 
 /**
  * @brief Helper Function: Identify value in node to be returned based on type
