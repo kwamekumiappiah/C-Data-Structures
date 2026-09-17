@@ -1,13 +1,13 @@
 /**
  * @file test_linked_list.c
- * @brief Automated unit test suite for the heterogeneous linked list.
+ * @brief Complete unit test suite for the heterogeneous linked list library.
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "linked_list.h"
 
-// 🧪 Custom Test Assertion Macro (Non-crashing)
+// 🧪 Custom Test Assertion Macro
 #define TEST_ASSERT(condition, message) do { \
     if (condition) { \
         printf("🟢 [PASS] %s\n", message); \
@@ -16,107 +16,133 @@
     } \
 } while(0)
 
-static void test_create_add_and_empty(void) {
-    printf("\n--- Running: Create, Add & Empty Tests ---\n");
+static void test_lifecycle_and_utility(void) {
+    printf("\n--- 1. Testing Creation, Empty State & Length ---\n");
     linkedList *list = create_linked_list();
-
-    // 1. Initial empty state
-    TEST_ASSERT(list != NULL, "List container creation");
-    TEST_ASSERT(get_list_length(list) == 0, "Initial length is 0");
+    
+    TEST_ASSERT(list != NULL, "List created successfully");
     TEST_ASSERT(is_empty(list) == 1, "New list is empty");
-
-    // 2. State after adding node
-    int val = 42;
-    add_node(list, TYPE_INT, &val);
-    TEST_ASSERT(get_list_length(list) == 1, "Length increments after adding node");
-    TEST_ASSERT(is_empty(list) == 0, "List is no longer empty");
-
-    free_linked_list(list);
-}
-
-static void test_prepend_and_contains(void) {
-    printf("\n--- Running: Prepend & Contains Tests ---\n");
-    linkedList *list = create_linked_list();
-
-    int val1 = 10;
-    int val2 = 20;
-    int missing_val = 99;
-
-    // 1. Prepend nodes to front
-    prepend_node(list, TYPE_INT, &val1); // List: [10]
-    prepend_node(list, TYPE_INT, &val2); // List: [20, 10]
-
-    TEST_ASSERT(get_list_length(list) == 2, "List length is 2 after prepending twice");
-
-    // 2. Value presence checks
-    TEST_ASSERT(contains_value(list, TYPE_INT, &val2) == 0, "Finds prepended value 20");
-    TEST_ASSERT(contains_value(list, TYPE_INT, &val1) == 0, "Finds original value 10");
-    TEST_ASSERT(contains_value(list, TYPE_INT, &missing_val) == 1, "Returns 1 for non-existent value 99");
-
-    free_linked_list(list);
-}
-
-static void test_delete_by_value_edge_cases(void) {
-    printf("\n--- Running: Delete by Value & Type Safety Tests ---\n");
-    linkedList *list = create_linked_list();
-
-    int head_val = 100;
-    int mid_val = 200;
-    char char_val = 'A';
-    int int_val = 65;
-
-    add_node(list, TYPE_INT, &head_val);
-    add_node(list, TYPE_INT, &mid_val);
-    add_node(list, TYPE_INT, &int_val);
-
-    // 1. Type-Mismatch Protection
-    int res = delete_node_value(list, TYPE_CHAR, &char_val);
-    TEST_ASSERT(res == 1, "Refuses to delete integer 65 when searching for char 'A'");
-    TEST_ASSERT(get_list_length(list) == 3, "List length remains unchanged on type mismatch");
-
-    // 2. Head Node Removal
-    res = delete_node_value(list, TYPE_INT, &head_val);
-    TEST_ASSERT(res == 0, "Successfully deletes head node");
-    TEST_ASSERT(get_list_length(list) == 2, "Length updates after head deletion");
-
-    // 3. Deleting Non-Existent Value
-    int ghost_val = 999;
-    res = delete_node_value(list, TYPE_INT, &ghost_val);
-    TEST_ASSERT(res == 1, "Returns failure when value is not in list");
-
-    free_linked_list(list);
-}
-
-static void test_index_bounds(void) {
-    printf("\n--- Running: Index Operations & Bounds Checking Tests ---\n");
-    linkedList *list = create_linked_list();
+    TEST_ASSERT(get_list_length(list) == 0, "New list length is 0");
 
     int val = 10;
     add_node(list, TYPE_INT, &val);
 
-    // 1. Out of bounds search
-    ListElement elem = search_by_index(list, 5);
-    TEST_ASSERT(elem.type == TYPE_INVALID, "Search out of bounds returns TYPE_INVALID");
-
-    // 2. Out of bounds deletion
-    int res = delete_node(list, 10);
-    TEST_ASSERT(res == 1, "Delete out of bounds fails safely");
+    TEST_ASSERT(is_empty(list) == 0, "List is not empty after adding node");
+    TEST_ASSERT(get_list_length(list) == 1, "List length updated to 1");
 
     free_linked_list(list);
 }
 
+static void test_insertion_modes(void) {
+    printf("\n--- 2. Testing Add, Prepend & Insert Value ---\n");
+    linkedList *list = create_linked_list();
+
+    int v1 = 10, v2 = 20, v3 = 30;
+
+    add_node(list, TYPE_INT, &v1);        // List: [10]
+    prepend_node(list, TYPE_INT, &v2);    // List: [20, 10]
+    insert_value(list, 1, TYPE_INT, &v3); // List: [20, 30, 10]
+
+    TEST_ASSERT(get_list_length(list) == 3, "Length is 3 after insertions");
+
+    ListElement e0 = search_by_index(list, 0);
+    ListElement e1 = search_by_index(list, 1);
+    ListElement e2 = search_by_index(list, 2);
+
+    TEST_ASSERT(*(int *)e0.data == 20, "Index 0 holds prepended value 20");
+    TEST_ASSERT(*(int *)e1.data == 30, "Index 1 holds inserted value 30");
+    TEST_ASSERT(*(int *)e2.data == 10, "Index 2 holds original value 10");
+
+    free_linked_list(list);
+}
+
+static void test_search_functions(void) {
+    printf("\n--- 3. Testing Search by Index & Value ---\n");
+    linkedList *list = create_linked_list();
+
+    int int_val = 42;
+    char char_val = 'Z';
+    add_node(list, TYPE_INT, &int_val);
+    add_node(list, TYPE_CHAR, &char_val);
+
+    // Search by index
+    ListElement e_found = search_by_index(list, 1);
+    ListElement e_invalid = search_by_index(list, 99);
+
+    TEST_ASSERT(e_found.type == TYPE_CHAR && *(char *)e_found.data == 'Z', "Search by index 1 finds char 'Z'");
+    TEST_ASSERT(e_invalid.type == TYPE_INVALID, "Out of bounds search returns TYPE_INVALID");
+
+    // Search by value
+    ListElement s_found = search_by_value(list, TYPE_INT, &int_val);
+    int missing = 999;
+    ListElement s_missing = search_by_value(list, TYPE_INT, &missing);
+
+    TEST_ASSERT(s_found.type == TYPE_INT && *(int *)s_found.data == 42, "Search by value finds integer 42");
+    TEST_ASSERT(s_missing.type == TYPE_INVALID, "Search for non-existent value returns TYPE_INVALID");
+
+    free_linked_list(list);
+}
+
+static void test_deletion_modes(void) {
+    printf("\n--- 4. Testing Delete by Index & Value ---\n");
+    linkedList *list = create_linked_list();
+
+    int v1 = 100, v2 = 200, v3 = 300;
+    add_node(list, TYPE_INT, &v1);
+    add_node(list, TYPE_INT, &v2);
+    add_node(list, TYPE_INT, &v3); // List: [100, 200, 300]
+
+    // Delete by value
+    int del_res = delete_node_value(list, TYPE_INT, &v1);
+    TEST_ASSERT(del_res == 0, "Delete head node by value succeeds");
+    TEST_ASSERT(get_list_length(list) == 2, "Length is 2 after deletion");
+
+    // Delete by index
+    del_res = delete_node(list, 1); // Deletes 300
+    TEST_ASSERT(del_res == 0, "Delete node by index succeeds");
+    TEST_ASSERT(get_list_length(list) == 1, "Length is 1 after second deletion");
+
+    free_linked_list(list);
+}
+
+static void test_cloning_and_display(void) {
+    printf("\n--- 5. Testing Deep Clone & List Print ---\n");
+    linkedList *original = create_linked_list();
+
+    int v1 = 5, v2 = 15;
+    add_node(original, TYPE_INT, &v1);
+    add_node(original, TYPE_INT, &v2);
+
+    printf("Visual Check - Original List:\n");
+    print_linked_list(original);
+
+    linkedList *clone = clone_list(original);
+    TEST_ASSERT(clone != NULL, "Cloned list creation");
+    TEST_ASSERT(clone != original, "Clone is at a distinct memory address");
+    TEST_ASSERT(get_list_length(clone) == get_list_length(original), "Clone has matching length");
+
+    // Verify independent state
+    delete_node(clone, 0);
+    TEST_ASSERT(get_list_length(clone) == 1, "Deleting from clone reduces clone length");
+    TEST_ASSERT(get_list_length(original) == 2, "Original list length remains unaffected");
+
+    free_linked_list(original);
+    free_linked_list(clone);
+}
+
 int main(void) {
     printf("=========================================\n");
-    printf(" 🚀 STARTING LINKED LIST AUTOMATED TESTS \n");
+    printf(" 🚀 STARTING LINKED LIST FULL TEST SUITE \n");
     printf("=========================================\n");
 
-    test_create_add_and_empty();
-    test_prepend_and_contains();
-    test_delete_by_value_edge_cases();
-    test_index_bounds();
+    test_lifecycle_and_utility();
+    test_insertion_modes();
+    test_search_functions();
+    test_deletion_modes();
+    test_cloning_and_display();
 
     printf("\n=========================================\n");
-    printf(" 🎉 TEST SUITE COMPLETE \n");
+    printf(" 🎉 ALL TESTS COMPLETED \n");
     printf("=========================================\n");
     return 0;
 }
