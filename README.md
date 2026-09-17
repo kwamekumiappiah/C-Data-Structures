@@ -108,13 +108,8 @@ The header exposes an **opaque struct** — client code never sees the internals
 ### Build & Run
 
 ```bash
-<<<<<<< HEAD
 git clone https://github.com/kwamekumiappiah/Heterogeneous-Linked-List-in-C.git
 cd Heterogeneous-Linked-List-in-C
-=======
-git clone https://github.com/<your-username>/<repo-name>.git
-cd <repo-name>
->>>>>>> 489e9bf33f5b9fb5be6acfd4fc972b09d663e0c4
 
 gcc -Wall -Wextra -g -Iinclude src/linked_list.c src/main.c -o build/program
 ./build/program
@@ -323,11 +318,7 @@ Everything in this README exists because those later stages are unreachable with
 I'm actively building toward low-level security work and always happy to talk C, memory safety, or how this project could be improved.
 
 - GitHub: [@kwamekumiappiah](https://github.com/kwamekumiappiah)
-<<<<<<< HEAD
 - LinkedIn: [kwameappiah-kumi-appiah](https://www.linkedin.com/in/kwameappiah-kumi-appiah/)
-=======
-- LinkedIn: https://www.linkedin.com/in/kwameappiah-kumi-appiah/
->>>>>>> 489e9bf33f5b9fb5be6acfd4fc972b09d663e0c4
 - Email: kwameappiahkumi@gmail.com
 
 ---
