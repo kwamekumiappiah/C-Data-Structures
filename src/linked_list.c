@@ -247,7 +247,24 @@ static int compare_node_value(DataType search_type, void *search_data, Node *nod
     return 1;
 }
 
-int contains_value(linkedList *linked_list, DataType type, void *data) {
+
+/**
+ * @brief Checks if the linked list is empty.
+ */
+int is_empty(const linkedList *linked_list) {
+    // 🛡️ Safe check: If pointer is NULL or head is NULL, the list is empty
+    if (!linked_list || linked_list->head == NULL) {
+        return 1; // True: List is empty
+    }
+
+    return 0; // False: List contains nodes
+}
+
+
+/**
+ * @brief Check a value is stored inside a node.
+ */
+int contains_value(const linkedList *linked_list, DataType type, void *data) {
     if (!linked_list || !data) return 1;
     
     Node *current_node = linked_list->head;
