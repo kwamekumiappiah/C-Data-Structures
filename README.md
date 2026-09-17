@@ -317,9 +317,9 @@ Everything in this README exists because those later stages are unreachable with
 
 I'm actively building toward low-level security work and always happy to talk C, memory safety, or how this project could be improved.
 
-- GitHub: [@your-username](https://github.com/your-username)
-- LinkedIn: *add your link*
-- Email: *add your email*
+- GitHub: [@kwamekumiappiah](https://github.com/kwamekumiappiah)
+- LinkedIn: https://www.linkedin.com/in/kwameappiah-kumi-appiah/
+- Email: kwameappiahkumi@gmail.com
 
 ---
 
