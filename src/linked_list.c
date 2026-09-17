@@ -252,31 +252,13 @@ static int compare_node_value(DataType search_type, void *search_data, Node *nod
 linkedList *clone_list(linkedList *linked_list) {
     if (!linked_list || !linked_list->head) return NULL;
 
-    linkedList *new_list = malloc(sizeof(linkedList));
+    linkedList *new_list = create_linked_list();
     if (!new_list) return NULL;
 
     Node *current_node_original = linked_list->head;
 
-    Node *current_node_duplicate = malloc(sizeof(Node));
-    if (!current_node_duplicate) return NULL;
-
-    new_list->head = current_node_duplicate;
-    current_node_duplicate->type = current_node_original->type;
-    current_node_duplicate->value = current_node_original->value;
-
-    current_node_original = current_node_original->next;
-
     while (current_node_original) {
-        Node *temp_current_node_duplicate = malloc(sizeof(Node));
-        if (!temp_current_node_duplicate) {
-            free_linked_list(new_list);
-            return NULL;
-        }
-        current_node_duplicate->next = temp_current_node_duplicate;
-        current_node_duplicate = temp_current_node_duplicate;
-        current_node_duplicate->type = current_node_original->type;
-        current_node_duplicate->value = current_node_original->value;
-
+        add_node(new_list, current_node_original->type, (void *)&(current_node_original->value));
         current_node_original = current_node_original->next;
     }
     return new_list;

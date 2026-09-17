@@ -22,6 +22,8 @@ int main(void) {
 
     linkedList *new_list = clone_list(my_linked_list);
     print_linked_list(new_list);
+    printf("%zu\n", get_list_length(my_linked_list));
+    printf("%zu\n", get_list_length(new_list));
 
     free_linked_list(my_linked_list);
     free_linked_list(new_list);
