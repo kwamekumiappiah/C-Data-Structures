@@ -248,9 +248,11 @@ static int compare_node_value(DataType search_type, void *search_data, Node *nod
     return 1;
 }
 
-
+/**
+ * @brief Create and clone of the list passed and return the cloned list
+ */
 linkedList *clone_list(linkedList *linked_list) {
-    if (!linked_list || !linked_list->head) return NULL;
+    if (!linked_list) return NULL;
 
     linkedList *new_list = create_linked_list();
     if (!new_list) return NULL;

@@ -11,13 +11,13 @@ int main(void) {
     char mychar = 'A';
 
 
-    add_node(my_linked_list, TYPE_INT, &number);
-    add_node(my_linked_list, TYPE_LONG_LONG, &xp);
-    add_node(my_linked_list, TYPE_INT, &number2);
-    add_node(my_linked_list, TYPE_CHAR, &letter);
+    // add_node(my_linked_list, TYPE_INT, &number);
+    // add_node(my_linked_list, TYPE_LONG_LONG, &xp);
+    // add_node(my_linked_list, TYPE_INT, &number2);
+    // add_node(my_linked_list, TYPE_CHAR, &letter);
 
     print_linked_list(my_linked_list);
-    printf("%d\n", prepend_node(my_linked_list, TYPE_CHAR, &mychar));
+    // prepend_node(my_linked_list, TYPE_CHAR, &mychar);
     print_linked_list(my_linked_list);
 
     linkedList *new_list = clone_list(my_linked_list);
