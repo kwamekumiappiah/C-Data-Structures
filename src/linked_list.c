@@ -32,6 +32,7 @@ typedef struct Node {
     struct Node *next;      // Pointer to the next node in the sequence
 } Node;
 
+
 /**
  * @struct linkedList
  * @brief Represents the container holding the list metadata and head pointer.
@@ -281,6 +282,7 @@ int contains_value(const linkedList *linked_list, DataType type, void *data) {
     return 1;
 }
 
+
 /**
  * @brief Return length of list
  */
@@ -289,12 +291,14 @@ size_t get_list_length(const linkedList *linked_list) {
     return linked_list->length; 
 }
 
+
 /**
  * @brief Add a node to the front of the linked list
  */
 int prepend_node(linkedList *linked_list, DataType type, void *data) {
     return insert_value(linked_list, 0, type, data);
 }
+
 
 /**
  * @brief Get and remove node based on value
@@ -324,6 +328,7 @@ int delete_node_value(linkedList *linked_list, DataType type, void *data) {
     }
     return 1;
 }
+
 
 /**
  * @brief Get and return value of the data inside a node based on value
@@ -372,6 +377,7 @@ ListElement search_by_index(linkedList *linked_list, size_t index) {
     return_data.type = target_node->type;
     return return_data;
 }
+
 
 /**
  * @brief Insert a node at a given index.
@@ -427,6 +433,7 @@ int delete_node(linkedList *linked_list, size_t index) {
     linked_list->length--;
     return 0;
 }
+
 
 /**
  * @brief Traverses the list and prints each node's value based on its type.
@@ -488,6 +495,7 @@ void print_linked_list(linkedList *linked_list) {
     printf("NULL\n");
 }
 
+
 /**
  * @brief Frees all nodes and the list container itself to prevent memory leaks.
  */
@@ -506,6 +514,7 @@ int free_linked_list(linkedList *linked_list) {
     free(linked_list);
     return 0;
 }
+
 
 /**
  * @brief Allocates and appends a new node to the end of the list.
@@ -529,6 +538,7 @@ int add_node(linkedList *linked_list, DataType type, void *data) {
     linked_list->length += 1;
     return 0;
 }
+
 
 /**
  * @brief Allocates and initializes a new linked list container.
