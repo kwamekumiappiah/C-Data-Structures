@@ -111,6 +111,7 @@ static Node *create_node(DataType type, void *data) {
             free(ptr);
             return NULL;
     }
+    ptr->next = NULL;
     return ptr;
 }
 

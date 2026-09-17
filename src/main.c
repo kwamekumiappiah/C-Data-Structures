@@ -1,28 +1,42 @@
+/**
+ * @file main.c
+ * @brief Minimal reproducer for the uninitialized `next` pointer bug in
+ *        insert_value() / prepend_node().
+ *
+ * Bug: when a node is inserted at index 0 into an EMPTY list, insert_value()
+ * sets linked_list->head = new_node but never sets new_node->next. Since
+ * create_node() doesn't initialize `next` either, the first node in the list
+ * ends up with a garbage `next` pointer. Traversing the list (print, search,
+ * free, etc.) then reads/follows that garbage pointer -> undefined behavior,
+ * usually a crash.
+ *
+ * To build and run:
+ *   gcc -std=c11 -Wall -Wextra -g -fsanitize=address,undefined \
+ *       -o main main.c linked_list.c
+ *   ./main
+ *
+ * (The sanitizer flags aren't required to see the crash, but they make the
+ * cause obvious instead of just segfaulting with no explanation.)
+ */
+
 #include <stdio.h>
 #include "linked_list.h"
 
 int main(void) {
-    linkedList *my_linked_list = create_linked_list();
-    int number = 10;
-    int number2 = 65;
-    long long xp = 435657890;
-    char letter = 'G';
-    char letter2 = 'F';
-    char mychar = 'A';
+    printf("Creating an empty list...\n");
+    linkedList *list = create_linked_list();
 
+    printf("Prepending a single int (42) into the empty list...\n");
+    int v = 42;
+    prepend_node(list, TYPE_INT, &v);   // index-0 insert into an empty list
 
-    add_node(my_linked_list, TYPE_INT, &number);
-    add_node(my_linked_list, TYPE_LONG_LONG, &xp);
-    add_node(my_linked_list, TYPE_INT, &number2);
-    add_node(my_linked_list, TYPE_CHAR, &letter);
+    printf("length = %zu\n", get_list_length(list));
 
-    print_linked_list(my_linked_list);
-    prepend_node(my_linked_list, TYPE_CHAR, &mychar);
-    print_linked_list(my_linked_list);
+    printf("Printing the list (this is where it crashes)...\n");
+    print_linked_list(list);   // walks head->next, which was never initialized
 
-    reverse_list(my_linked_list);
-    print_linked_list(my_linked_list);
-    free_linked_list(my_linked_list);
+    printf("If you see this line, the bug is fixed.\n");
+
+    free_linked_list(list);
     return 0;
-
 }
