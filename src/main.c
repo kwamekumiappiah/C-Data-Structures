@@ -19,7 +19,12 @@ int main(void) {
     print_linked_list(my_linked_list);
     printf("%d\n", prepend_node(my_linked_list, TYPE_CHAR, &mychar));
     print_linked_list(my_linked_list);
+
+    linkedList *new_list = clone_list(my_linked_list);
+    print_linked_list(new_list);
+
     free_linked_list(my_linked_list);
+    free_linked_list(new_list);
     return 0;
 
 }
